@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import PrivacyPolicyContent from "./PrivacyPolicyContent";
+import TermsOfServiceContent from "./TermsOfServiceContent";
 import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowRight,
@@ -1339,6 +1341,8 @@ function DiscoveryCallForm({ onSuccess }: { onSuccess: () => void }) {
 function OSheaSystemsLanding() {
   const reduce = useReducedMotion();
   const [modalOpen, setModalOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [termsOpen, setTermsOpen] = useState(false);
 
   const [billing, setBilling] = useState("Monthly");
   const [usageOpen, setUsageOpen] = useState({ bronze: false, silver: false, gold: false });
@@ -1376,6 +1380,21 @@ function OSheaSystemsLanding() {
 
   const onOpenModal = () => setModalOpen(true);
   const onCloseModal = () => setModalOpen(false);
+
+  const onOpenPrivacy = useCallback(() => setPrivacyOpen(true), []);
+  const onClosePrivacy = useCallback(() => setPrivacyOpen(false), []);
+  const onOpenTerms = useCallback(() => setTermsOpen(true), []);
+  const onCloseTerms = useCallback(() => setTermsOpen(false), []);
+
+  // Lock body scroll when overlay is open
+  useEffect(() => {
+    if (privacyOpen || termsOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [privacyOpen, termsOpen]);
 
   const billingOptions = ["Monthly", "Quarterly", "Annual"];
 
@@ -2400,8 +2419,8 @@ function OSheaSystemsLanding() {
                 </div>
 
                 <div className="flex flex-wrap gap-4 text-sm font-medium text-slate-600 md:justify-end">
-                  <a href="#" className="cursor-pointer transition-colors duration-200 hover:text-slate-900" onClick={(e) => e.preventDefault()}>Privacy Policy</a>
-                  <a href="#" className="cursor-pointer transition-colors duration-200 hover:text-slate-900" onClick={(e) => e.preventDefault()}>Terms of Service</a>
+                  <button className="cursor-pointer transition-colors duration-200 hover:text-slate-900 bg-transparent border-none p-0 font-medium text-sm text-slate-600" onClick={onOpenPrivacy}>Privacy Policy</button>
+                  <button className="cursor-pointer transition-colors duration-200 hover:text-slate-900 bg-transparent border-none p-0 font-medium text-sm text-slate-600" onClick={onOpenTerms}>Terms of Service</button>
                   <span className="text-slate-400">ABN 90 414 617 370</span>
                 </div>
               </div>
@@ -2417,6 +2436,80 @@ function OSheaSystemsLanding() {
         <Modal open={modalOpen} onClose={onCloseModal} title="Book a Discovery Call">
           <DiscoveryCallForm onSuccess={onCloseModal} />
         </Modal>
+
+        {/* Privacy Policy Overlay */}
+        <AnimatePresence>
+          {privacyOpen && (
+            <motion.div
+              className="fixed inset-0 z-[90] bg-white"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="h-full overflow-y-auto">
+                {/* Sticky Header */}
+                <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-xl border-b border-slate-200/70 shadow-sm">
+                  <div className="mx-auto max-w-4xl flex items-center justify-between px-4 py-3 sm:px-6">
+                    <div className="leading-tight">
+                      <div className="text-sm font-semibold tracking-tight text-slate-900">O'Shea Systems</div>
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-600">Privacy Policy</div>
+                    </div>
+                    <button
+                      onClick={onClosePrivacy}
+                      className="group inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                    >
+                      <X className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
+                      Back to Site
+                    </button>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 pb-20">
+                  <PrivacyPolicyContent />
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Terms of Service Overlay */}
+        <AnimatePresence>
+          {termsOpen && (
+            <motion.div
+              className="fixed inset-0 z-[90] bg-white"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="h-full overflow-y-auto">
+                {/* Sticky Header */}
+                <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-xl border-b border-slate-200/70 shadow-sm">
+                  <div className="mx-auto max-w-4xl flex items-center justify-between px-4 py-3 sm:px-6">
+                    <div className="leading-tight">
+                      <div className="text-sm font-semibold tracking-tight text-slate-900">O'Shea Systems</div>
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-600">Terms of Service</div>
+                    </div>
+                    <button
+                      onClick={onCloseTerms}
+                      className="group inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                    >
+                      <X className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
+                      Back to Site
+                    </button>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 pb-20">
+                  <TermsOfServiceContent />
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
