@@ -1808,8 +1808,27 @@ function OSheaSystemsLanding() {
                     <Bot className="h-5 w-5 text-slate-900 transition-transform duration-300 group-hover:rotate-3 group-hover:scale-[1.03]" />
                   </div>
                 </div>
-                <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
-                  Voice example content will render here.
+                <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 border border-emerald-200">
+                      <Phone className="h-4 w-4 text-emerald-700" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold text-slate-900">AI Voice Demo</div>
+                      <div className="text-xs text-slate-500">Listen to a sample inbound call</div>
+                    </div>
+                  </div>
+                  <audio
+                    controls
+                    preload="metadata"
+                    className="w-full rounded-lg"
+                    style={{ filter: "contrast(0.9)" }}
+                  >
+                    <source src="/audio/ai-voice-demo.mp3" type="audio/mpeg" />
+                    <source src="/audio/ai-voice-demo.ogg" type="audio/ogg" />
+                    <source src="/audio/ai-voice-demo.wav" type="audio/wav" />
+                    Your browser does not support the audio element.
+                  </audio>
                 </div>
               </div>
             </div>
